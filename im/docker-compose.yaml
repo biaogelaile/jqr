@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+    mysql:
+       image: mariadb:10.3.5 
+       command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+       restart: always
+       environment:
+           - MYSQL_ALLOW_EMPTY_PASSWORD=yes 
+           - MYSQL_ROOT_PASSWORD=Niodc2515525 
+           - MYSQL_DATABASE=chatbot
+           - MYSQL_USER=chatbot
+           - MYSQL_PASSWORD=chatbot2515525
+       volumes:
+           - ./mysql/data:/var/lib/mysql
+       expose:
+           - "3306"
+       ports:
+           - 16061:3306
+    nginx-server:
+        image: mychat/chatnginx
+        restart: always
+        ports:
+            - 18080:5001
+        volumes:
+            - /data/mychat/upload:/data/upload
+            - /data/im/image/houtaiui/dist:/data/admin
+    chatapi:
+        image: mychat/chatapi
+        restart: always
+        expose:
+            - "5000"
+    chatsocket:
+        image: mychat/chatroom
+        restart: always
+        expose:
+            - "5002"
+    chatupload:
+        image: mychat/chatupload
+        restart: always
+        expose:
+            - "6000"
+        volumes:
+            - /data/mychat/upload:/data/upload
+    opbot-backstage:
+        image: mychat/houtaiapi
+        restart: always
+        expose:
+            - "7000"
+    chatbot:
+        image: mychat/chatbot
+        restart: always
+    chatbot-youke:
+        image: mychat/chatbot-youke
+        restart: always
